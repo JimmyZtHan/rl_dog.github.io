@@ -68,17 +68,6 @@
                       <span>Video</span>
                     </a>
                   </span>
-                  <!-- Code Link. -->
-                  <span class="link-block">
-                    <a
-                      href="https://github.com/google/nerfies"
-                      class="external-link button is-normal is-rounded is-dark"
-                    >
-                      <span class="icon">
-                        <i class="fab fa-github"></i>
-                      </span>
-                      <span>Code</span>
-                    </a>
                   </span>
                 </div>
               </div>
@@ -99,20 +88,20 @@
                 allowfullscreen
               ></iframe>
             <iframe
-                src="https://www.youtube.com/embed/_vQStukADK4"
+                src="https://www.youtube.com/embed/8TNYjnQeNXU"
                 frameborder="0"
                 allow="autoplay; encrypted-media"
                 allowfullscreen
               ></iframe>
 
             <iframe
-                src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                src="https://www.youtube.com/embed/yBukh-DEMhg"
                 frameborder="0"
-                allow="autoplay; encrypted-media"
+                allow="autoplay; encrypted-media" 
                 allowfullscreen
               ></iframe>
            <iframe
-                src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                src="https://www.youtube.com/embed/F_2NQznCUUg"
                 frameborder="0"
                 allow="autoplay; encrypted-media"
                 allowfullscreen
@@ -146,23 +135,8 @@
         </div>
         <!--/ Abstract. -->
 
-        <!-- Paper video. -->
-        <div class="columns is-centered has-text-centered">
-          <div class="column is-four-fifths">
-            <h2 class="title is-3">Video</h2>
-            <div class="publication-video">
-              <iframe
-                src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen
-              ></iframe>
-            </div>
-          </div>
-        </div>
-        <!--/ Paper video. -->
-      </div>
-    </section>
+        
+
 
     <section class="section">
       <div class="container is-max-desktop">
@@ -171,130 +145,170 @@
           <div class="column">
             <div class="content">
               <h2 class="title is-3">Task 1</h2>
-              <p>
-               #### Environment setting up:
+                <h4 id='environment-setting-up'>Environment setting up:</h4>
+                <ul>
+                <li>My GPU: RTX4060 laptop</li>
 
-              - My GPU: RTX4060 laptop
+                </ul>
+                <ul>
+                <li>Encountered error:  <code>RuntimeError: nvrtc: error: invalid value for --gpu-architecture (-arch)</code></li>
 
-              - Encountered error:  ` RuntimeError: nvrtc: error: invalid value for --gpu-architecture (-arch)`
+                </ul>
+                <ul>
+                <li>Fixed by: Reinstall cuda driver, install pytorch preview (Nightly)</li>
 
-              - Fixed by: Reinstall cuda driver, install pytorch preview (Nightly)
+                </ul>
+                <p>So my config is: <code>PyTorch version 2.4.0.dev20240329+cu121+ubuntu22.04</code> </p>
+                <h4 id='code-completion'>Code completion:</h4>
+                <p>Before doing this part, I learned about some basic concepts in Deep Reinforcement Learning, including PPO, Q-learing and Actor-Critic.</p>
+                <p>The code I completed include clipped surrogate loss and the final loss for PPO Actor-Critic.</p>
+                <h4 id='walk-at-a-speed-of-2-ms'>Walk at a speed of 2 m/s:</h4>
+                <p>In this section, I train a robot dog to walk forward at a speed of 2m/s. </p>
+                <p>By setting command of x-velocity to 2 m/s when play the policy, the dog can gradually achieve the speed and maintain a good movement to walk forwards.</p>
+                <h5 id='my-observation'>My observation:</h5>
+                <ul>
+                <li>A small batch size can lead to very noisy gradients, causing the value function loss to explode easily. I observed this when initially trying to monitor the training process with Isaac Gym visualization. However, the RAM on my GPU only allowed for 10 environments to run smoothly. In such a setting, the value function loss can become extremely large. This is reasonable since with smaller number of environments, the samples are very similar and so there is less diversity in the data.</li>
+                <li>Some reward terms may decrease and then increase during the training process (e.g., angular velocity, linear velocity). The trends of different reward terms indicate that the policy is gradually refined through interaction with the environment. Overall, the reward grows and stabilizes around a certain value.</li>
+                <li>When playing the policy, the dog&#39;s speed gradually increases to the commanded speed. And then oscillates around it, this is also true for tracking y-velocity and tracking yaw.</li>
+                <li>The episode length and time will gradually grow during the training. In the late stages of training, the policy spends more time in exploitation. The value loss function gradually decrease and the surrogate loss function decreases and then increases.</li>
 
-              So my config is: `PyTorch version 2.4.0.dev20240329+cu121+ubuntu22.04  ` 
-              </p>
+                </ul>
+                <h5 id='training-data-1'>Training Data:</h5>
+                <p>Train reward: the mean reward arrives at approximately 25 after 6 min&#39;s training</p>
+                <div style="text-align: center;">
+                <img src="./static/figures/flat/flat_rew.png" alt="image-20240407205832645" style="zoom:67%;" />
+                </div><ul>
+                <li>Value loss function</li>
+
+                </ul>
+                 <div style="text-align: center;">
+            <img src="./static/figures/flat/flat_vl.png" alt="image-20240407205849134" style="zoom:67%;" />
+        </div><ul>
+                <li>Surrogate loss function</li>
+
+                </ul>
+               <div style="text-align: center;">
+            <img src="./static/figures/flat/flat_sl.png" alt="image-20240407205905407" style="zoom:67%;" />
+        </div><li>Policy performance</li>
+
+                </ul>
+                 <div style="text-align: center;">
+            <img src="./static/figures/flat/flat.png" alt="image-20240407205531807" style="zoom: 67%;" />
+        </div>
+                <h4 id='climb-updown-stairs'>Climb up/down stairs:</h4>
+                <p>In this section, I train a robot dog to climb up/down stairs. </p>
+                <p>I used the terrain in isaac gym to create stairs, effectively trained the dog to walk up/down the stairs at a speed of 2 m/s. I set the scalar of stumble to -1.0, thus penalizing dog&#39;s vertical collision with the stairs. </p>
+                <h5 id='training-data-2'>Training Data:</h5>
+                <ul>
+                <li>Train reward: the mean reward arrives at approximately 13 after 6 min&#39;s training</li>
+
+                </ul>
+                <ul>  <div style="text-align: center;">
+            <img src="./static/figures/terrain/terrain_rew.png" alt="image-20240407195921185" style="zoom:67%;" />
+        </div>
+                <li>Value loss function</li>
+
+                </ul>
+                <ul> <div style="text-align: center;">
+            <img src="./static/figures/terrain/terrain_vl.png" alt="image-20240407205450111" style="zoom:67%;" />
+        </div>
+                <li>Surrogate loss function</li>
+
+                </ul>
+                <div style="text-align: center;">
+            <img src="./static/figures/terrain/terrain_vs.png" alt="image-20240407205531807" style="zoom: 67%;" />
+        </div>
+    </li><li>Policy performance</li>
+
+                </ul>
+            </div><div style="text-align: center;">
+            <img src="./static/figures/terrain/terrain.png" alt="image-20240407205531807" style="zoom: 67%;" />
+        </div>
+          </div>
+          <!--/ Visual Effects. -->
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <!-- Visual Effects. -->
+          <div class="column">
+            <div class="content">
+              <h2 class="title is-3">Task 2</h2>
+                
+                <p>In task 2, I trained the dog to get up after falling In this task, I gained many experience in how to find, valid and tune reward functions.</p>
+                <h5 id='reward-function-design'>Reward function design:</h5>
+                <p>It is crucial to find the correct reward function. And based on my experience, it is much more effective than tuning PPO hyper-parameters.</p>
+                <p>I introduced new reward functions like <code>_reward_fall_down</code> to penalize falling, and modified <code>_reward_feet_air_time</code> to penalize air time for the feet if the dog fell.</p>
+                <p>Initially, the dog attempted to stand up by randomly moving its legs in the air, rotating, or moving sideways on the ground with its back. I identified an issue with <code>_reward_tracking_ang_vel</code> and <code>_reward_tracking_lin_vel</code>, where the original implementation awarded positive rewards even when the dog was fallen. To improve this, I penalized angular and linear velocity along the xy-axis when the dog fell.</p>
+                <p>Also, I modified the <code>_reward_orientation</code> to encourage the dog to roll back along y-axis by rewarding y-axis&#39;s projection to gravity vector. This is also encouraged by another function that rewarding angular velocity along x-axis.</p>
+                <p>I also modified <code>_reward_orientation</code> to encourage the dog to roll back along the y-axis by rewarding the y-axis&#39;s projection onto the gravity vector. This was further supported by another function that rewarded angular velocity along the x-axis.</p>
+                <p>But the dog struggled to prop itself up, so I modified <code>_reward_dof_pos_limits</code>, <code>_reward_dof_acc</code>, and <code>_reward_torques</code> to encourage more active movement when the dog was down. I also increased the parameter value for the PD-controller.</p>
+                <p>When modifying these reward functions, I will identify the problem by observing the changes in different rewards during the training process. Additionally, I will deduce the reasons of incorrectness based on the performance observed when playing the policy. By repeatedly conducting experiments and making refinements, I have finally trained some policy that I believe works well.</p>
+                <p>In the first successful version, the dog managed to stand up correctly, but its movements were odd (its posture was too low and its feet were spread too wide). I improved this by increasing the penalty for <code>dof_lim</code> when standing up and slightly reducing the push force. In the second version, the dog&#39;s walk appeared more natural.</p>
+                <h5 id='other-observation'>Other observation:</h5>
+                <ul>
+                <li>The value of push matters a lot. I have found that if the push force is too weak, the dog tends to learn a policy that resist well to push but fails to learn how to get up. So an relatively large linear and angular velocity will benefit the training.  Also, the  interval of push also affects the training, if the interval is too short, the momentum of previous push may interfere with the learning process. A longer push interval also enable to dog to learn a more correct policy. Here, I adopt the push setting that has interval of 8 s, linear velocity of 5 m/s and angular velocity of 5 rad/s. When testing the policy, I increase the push force to make the dog fall down.</li>
+                <li>The training process is significantly slower than previous tasks, requiring more than 25 minutes to stabilize gradually. This can be explained as getting up is relatively difficult to learn. Initially, the reward increases very slowly, and then it starts to grow faster after reaching a certain point. This &quot;turning point&quot; matches well with some turning points in certain reward terms (e.g., feet_air_time, rew_orientation and rew_action_rate). It also matches the point when some reward term becomes near positive (e.g. rew_base_height). The pattern observed in the reward curve effectively shows the algorithm can gradually learn the policy of how to get up, proving the effectiveness of modified reward functions. </li>
+                <li>Also, I allowed the experiments to run for a longer time, which takes around one hour. However, the reward  begins to decline after a certain points, this may indicate that it suffers from catastrophic forgetting. The algorithm seems can not optimize for very long time horizons, suggesting that that I am still using a suboptimal hyper-parameters. This may also be proved by the oscillating value loss. I think this is a issue I need to delve in and think more carefully. Related figure can be found in the appendix.</li>
+
+                </ul>
+                <p>&nbsp;</p>
+                <h5 id='conclusion-and-further-thinking'>Conclusion and further thinking:</h5>
+                <p>After implementing these modifications and undergoing proper training, the dog has not only learned to get up correctly after falling but also become very robust to random pushes.</p>
+                <p>Although the dog can stand up, there are still some issues to address. Firstly, the dog&#39;s velocity along the y-axis and its yaw response to given commands are suboptimal. This could be explained by the fact that during training, pushes primarily causes unexpected changes along the y-axis and the yaw. Additionally, the dog&#39;s walking style is less natural compared to that observed in Task 1. However, I am confident that these shortcomings can be addressed with further tuning.</p>
+                <h5 id='training-data-3'>Training Data:</h5>
+                <ul>
+                <li><p>Train reward: the mean reward arrives at approximately 24 after 25min&#39;s training</p>
+                <div style="text-align: center;">
+                  <img src="./static/figures/fall_down/fall_down_rew.png" alt="image-20240407230456638" style="zoom:67%;" />
+              </div></li>
+                <li><p>Value loss function:</p>
+                <div style="text-align: center;">
+        <img src="./static/figures/fall_down/fall_down_vl.png" alt="image-20240407230621313" style="zoom:67%;" />
+    </div></li>
+                <li><p>Surrogate loss function</p>
+                </li><div style="text-align: center;">
+        <img src="./static/figures/fall_down/fall_down_vs.png" alt="image-20240407230642835" style="zoom:67%;" />
+    </div>
+                <li>Policy performance</li>
+
+                <div style="text-align: center;">
+    <img src="./static/figures/fall_down/fall_down.png" alt="image-20240407205531807" style="zoom: 67%;" />
+</div>
+                <h4 id='climb-updown-stairs'>Climb up/down stairs:</h4>
+
+                <h5 id='appendix'>Appendix:</h5>
+                <p>The PPO Hyper-parameters:</p>
+                <ul>
+                <li>Batch size = 4096x24</li>
+                <li>Number of epochs: 5</li>
+                <li>Clip range: 0.2</li>
+                <li>Entropy coefficient: 0.01</li>
+                <li>Discount factor: 0.99</li>
+                <li>Learning rate: adaptive</li>
+
+                </ul>
+                <p>Training for one hour: after 50 mins, the reward starts to decline.</p>
+                <p><img src="./static/figures/fall_down/fall_down_rew.png" alt="image-20240408012658675" style="zoom:67%;" /></p>
+
             </div>
           </div>
           <!--/ Visual Effects. -->
 
-          <!-- Matting. -->
-          <div class="column">
-            <h2 class="title is-3">Task 2</h2>
-            <div class="columns is-centered">
-              <div class="column content">
-                <p>
-                  As a byproduct of our method, we can also solve the matting
-                  problem by ignoring samples that fall outside of a bounding
-                  box during rendering.
-                </p>
-                <video id="matting-video" controls playsinline height="100%">
-                  <source src="./static/videos/matting.mp4" type="video/mp4" />
-                </video>
-              </div>
-            </div>
-          </div>
         </div>
-        <!--/ Matting. -->
 
-        <!-- Animation. -->
-        <div class="columns is-centered">
-          <div class="column is-full-width">
-            <h2 class="title is-3">Conclusion</h2>
-
-            <!-- Interpolating. -->
-            <h3 class="title is-4">Interpolating states</h3>
-            <div class="content has-text-justified">
-              <p>
-                We can also animate the scene by interpolating the deformation
-                latent codes of two input frames. Use the slider here to
-                linearly interpolate between the left frame and the right frame.
-              </p>
-            </div>
-            <div class="columns is-vcentered interpolation-panel">
-              <div class="column is-3 has-text-centered">
-                <img
-                  src="./static/images/interpolate_start.jpg"
-                  class="interpolation-image"
-                  alt="Interpolate start reference image."
-                />
-                <p>Start Frame</p>
-              </div>
-              <div class="column interpolation-video-column">
-                <div id="interpolation-image-wrapper">Loading...</div>
-                <input
-                  class="slider is-fullwidth is-large is-info"
-                  id="interpolation-slider"
-                  step="1"
-                  min="0"
-                  max="100"
-                  value="0"
-                  type="range"
-                />
-              </div>
-              <div class="column is-3 has-text-centered">
-                <img
-                  src="./static/images/interpolate_end.jpg"
-                  class="interpolation-image"
-                  alt="Interpolation end reference image."
-                />
-                <p class="is-bold">End Frame</p>
-              </div>
-            </div>
-            <br />
-            <!--/ Interpolating. -->
-
-            <!-- Re-rendering. -->
-            <h3 class="title is-4">Re-rendering the input video</h3>
-            <div class="content has-text-justified">
-              <p>
-                Using <span class="dnerf">Nerfies</span>, you can re-render a
-                video from a novel viewpoint such as a stabilized camera by
-                playing back the training deformations.
-              </p>
-            </div>
-            <div class="content has-text-centered">
-              <video
-                id="replay-video"
-                controls
-                muted
-                preload
-                playsinline
-                width="75%"
-              >
-                <source src="./static/videos/replay.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <!--/ Re-rendering. -->
-          </div>
-        </div>
-        <!--/ Animation. -->
       </div>
     </section>
 
     <footer class="footer">
       <div class="container">
         <div class="content has-text-centered">
-          <a class="icon-link" href="./static/videos/nerfies_paper.pdf">
-            <i class="fas fa-file-pdf"></i>
-          </a>
-          <a
-            class="icon-link"
-            href="https://github.com/keunhong"
-            class="external-link"
-            disabled
-          >
-            <i class="fab fa-github"></i>
-          </a>
-        </div>
         <div class="columns is-centered">
           <div class="column is-8">
             <div class="content">
