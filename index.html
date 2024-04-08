@@ -163,7 +163,7 @@
                 <p>Before doing this part, I learned about some basic concepts in Deep Reinforcement Learning, including PPO, Q-learing and Actor-Critic.</p>
                 <p>The code I completed include clipped surrogate loss and the final loss for PPO Actor-Critic.</p>
                 <h4 id='walk-at-a-speed-of-2-ms'>Walk at a speed of 2 m/s:</h4>
-                <p>In this section, I train a robot dog to walk forward at a speed of 2m/s. </p>
+                <p>In this section, I trained the robot dog to walk forward at a speed of 2m/s. </p>
                 <p>By setting command of x-velocity to 2 m/s when play the policy, the dog can gradually achieve the speed and maintain a good movement to walk forwards.</p>
                 <h5 id='my-observation'>My observation:</h5>
                 <ul>
@@ -196,8 +196,8 @@
             <img src="./static/figures/flat/flat.png" alt="image-20240407205531807" style="zoom: 67%;" />
         </div>
                 <h4 id='climb-updown-stairs'>Climb up/down stairs:</h4>
-                <p>In this section, I train a robot dog to climb up/down stairs. </p>
-                <p>I used the terrain in isaac gym to create stairs, effectively trained the dog to walk up/down the stairs at a speed of 2 m/s. I set the scalar of stumble to -1.0, thus penalizing dog&#39;s vertical collision with the stairs. </p>
+                <p>In this section, I trained the robot dog to climb up/down stairs. </p>
+                <p>I used the terrain in Isaac gym to create stairs, effectively trained the dog to walk up/down the stairs at a speed of 2 m/s. I set the scalar of stumble to -1.0, thus penalizing dog&#39;s vertical collision with the stairs. </p>
                 <h5 id='training-data-2'>Training Data:</h5>
                 <ul>
                 <li>Train reward: the mean reward arrives at approximately 13 after 6 min&#39;s training</li>
@@ -264,7 +264,7 @@
                 <ul>
                 <li>The value of push matters a lot. I have found that if the push force is too weak, the dog tends to learn a policy that resist well to push but fails to learn how to get up. So an relatively large linear and angular velocity will benefit the training.  Also, the  interval of push also affects the training, if the interval is too short, the momentum of previous push may interfere with the learning process. A longer push interval also enable to dog to learn a more correct policy. Here, I adopt the push setting that has interval of 8 s, linear velocity of 5 m/s and angular velocity of 5 rad/s. When testing the policy, I increase the push force to make the dog fall down.</li>
                 <li>The training process is significantly slower than previous tasks, requiring more than 25 minutes to stabilize gradually. This can be explained as getting up is relatively difficult to learn. Initially, the reward increases very slowly, and then it starts to grow faster after reaching a certain point. This &quot;turning point&quot; matches well with some turning points in certain reward terms (e.g., feet_air_time, rew_orientation and rew_action_rate). It also matches the point when some reward term becomes near positive (e.g. rew_base_height). The pattern observed in the reward curve effectively shows the algorithm can gradually learn the policy of how to get up, proving the effectiveness of modified reward functions. </li>
-                <li>Also, I allowed the experiments to run for a longer time, which takes around one hour. However, the reward  begins to decline after a certain points, this may indicate that it suffers from catastrophic forgetting. The algorithm seems can not optimize for very long time horizons, suggesting that that I am still using a suboptimal hyper-parameters. This may also be proved by the oscillating value loss. I think this is a issue I need to delve in and think more carefully. Related figure can be found in the appendix.</li>
+                <li>Also, I allowed the experiments to run for a longer time, which takes around one hour. However, the reward  begins to decline after a certain points, this may indicate that it suffers from catastrophic forgetting. The algorithm seems can not optimize for very long time horizons, suggesting that that I am still using a suboptimal hyper-parameters. This may also be proved by the oscillating value loss. I think this is an issue I need to delve in and think more carefully. Related figure can be found in the appendix.</li>
 
                 </ul>
                 <p>&nbsp;</p>
@@ -295,7 +295,7 @@
                 <h5 id='appendix'>Appendix:</h5>
                 <p>The PPO Hyper-parameters:</p>
                 <ul>
-                <li>Batch size = 4096x24</li>
+                <li>Batch size: 4096x24</li>
                 <li>Number of epochs: 5</li>
                 <li>Clip range: 0.2</li>
                 <li>Entropy coefficient: 0.01</li>
